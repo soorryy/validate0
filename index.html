@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>表單</title>
+		<style>
+			ul{
+				list-style:none;
+			}
+		</style>
+	</head>
+<body>
+
+<ul id="messages"></ul>
+
+	<form class="form-horizontal" role="form" id="form" method="post" action="">
+		
+		<div>
+			<label for="name">名子</label>
+			<div>		
+				<input type="text" id="name" name="name">
+			</div>
+		</div>
+		
+		<div>
+			<label for="content">留言內容</label>
+			<div>
+				<textarea class="form-control" rows="7" id="content" name="content"></textarea>
+			</div>
+		</div>
+		<div>	
+			<button type="submit">送出</button>
+		</div>
+		
+	</form>
+	
+	<!-- jQuery -->
+	<script src="js/jquery-1.11.0.min.js"></script>
+	<!-- jQuery Validation Plugin -->
+	<script src="js/jquery.validate.min.js"></script>
+	<!-- socket.IO -->
+	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	
+	<script src=""></script>
+
+	<script src=""></script>
+
+	<script src=""></script>
+
+	<script src=""></script>
+
+	<script>
+		
+		$(function() {
+
+			// jQuery Validation Plugin的套用
+			$('#form').validate({
+				/**
+				 * validate 規則設定
+				 */
+				rules: {		
+					name: {
+						required: true,
+						maxlength: 30
+					},
+					content:    {
+						required:  true,
+						maxlength: 1000
+					}
+				},
+				/**
+				 * validate 訊息設定
+				 */
+				messages: {
+					name:     "沒有輸入姓名或者名稱過長。",
+
+					content:     {
+						required:  "請輸入內容。",
+						maxlength: jQuery.format("詢問內容請輸入 1000 字以内。") 
+					},						
+				}
+			}
+			
+			);
+			//node socket
+			var socket = io();
+				$('#form').submit(function(){
+				  socket.emit('chat message', $('#name').val());	//按submit 後就會發給伺服器#name的value的訊息
+				  
+				  socket.emit('chat message', $('#content').val());	//按submit 後就會發給伺服器#content的value的訊息
+				  return false;
+				});
+				socket.on('chat message', function(msg){		//如果伺服器端傳來訊息 就接收
+				  $('#messages').append($('<li>').text(msg));	//並且把msg加在#message 用li包住
+				});
+		});
+		</script>
+	</body>
+</html>
