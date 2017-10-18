@@ -36,9 +36,9 @@
 	</form>
 	
 	<!-- jQuery -->
-	<script src="js/jquery-1.11.0.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<!-- jQuery Validation Plugin -->
-	<script src="js/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/additional-methods.js"></script>
 	<!-- socket.IO -->
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 	
@@ -55,7 +55,7 @@
 		$(function() {
 
 			// jQuery Validation Plugin的套用
-			$('#form').validate({
+		var validate=$('#form').validate({
 				/**
 				 * validate 規則設定
 				 */
@@ -83,8 +83,11 @@
 			}
 			
 			);
-			//node socket
-			var socket = io();
+			if(validate)
+			{
+				//node socket
+				var socket = io();
+				
 				$('#form').submit(function(){
 				  socket.emit('chat message', $('#name').val());	//按submit 後就會發給伺服器#name的value的訊息
 				  
@@ -94,6 +97,8 @@
 				socket.on('chat message', function(msg){		//如果伺服器端傳來訊息 就接收
 				  $('#messages').append($('<li>').text(msg));	//並且把msg加在#message 用li包住
 				});
+			}
+			
 		});
 		</script>
 	</body>
